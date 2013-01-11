@@ -3,11 +3,11 @@
   <metadata>
     <id>Auth0Client</id>
     <version>0.5.0</version>
-    <authors>auth0</authors>
-    <owners>auth0</owners>
+    <owners>Auth0</owners>
+	<authors>Eugenio Pace, Sebastian Iacomuzzi</authors>
     <projectUrl>http://auth0.com/</projectUrl>
-	<!--<licenseUrl>[TBC]</licenseUrl>-->
-    <!--<iconUrl>[TBC]</iconUrl>-->
+	<licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
+    <iconUrl>http://secure.gravatar.com/avatar/805765c256ff8617fcad483b5476faf2</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>
 		Auth0Client is a helper class that plugs into DotNetOpenAuth. Most of the heavylifting is actually done by the OAuth2Client though. Our helper just makes sure you are using the right endpoints and sending the right parameters to Auth0.
