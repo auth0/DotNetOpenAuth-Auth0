@@ -1,8 +1,6 @@
 # aspnet-auth0
 
-## Auth0 NuGet packages
-
-### Available packages
+## NuGet packages
 * Auth0Client
 
 ### Generate Packages
