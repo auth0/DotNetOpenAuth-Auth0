@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
-<package >
+<package>
   <metadata>
     <id>Auth0Client</id>
     <version>0.5.0</version>
-    <authors>auth0.com</authors>
-    <owners>[TBC]</owners>
+    <authors>auth0</authors>
+    <owners>auth0</owners>
     <projectUrl>http://auth0.com/</projectUrl>
 	<!--<licenseUrl>[TBC]</licenseUrl>-->
     <!--<iconUrl>[TBC]</iconUrl>-->
@@ -16,9 +16,8 @@
     <copyright>Copyright 2013</copyright>
     <tags>Auth0 Auth0Client OAuth OpenAuth</tags>
     <dependencies>
-      <dependency id="Microsoft.AspNet.Mvc" version="4.0" />
-	  <dependency id="Newtonsoft.Json" version="4.5" />
-	  <dependency id="DotNetOpenAuth.AspNet" version="4.1" />
+		<dependency id="Newtonsoft.Json" version="4.5.1" />
+		<dependency id="DotNetOpenAuth.AspNet" version="4.1.4.12333" />
     </dependencies>
   </metadata>
 </package>
