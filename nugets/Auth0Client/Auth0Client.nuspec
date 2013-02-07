@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>Auth0Client</id>
-    <version>0.5.0</version>
+    <version>0.5.1</version>
     <owners>Auth0</owners>
 	<authors>Eugenio Pace, Sebastian Iacomuzzi</authors>
     <projectUrl>http://auth0.com/</projectUrl>

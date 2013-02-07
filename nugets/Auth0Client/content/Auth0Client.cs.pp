@@ -11,9 +11,9 @@
 
     public class Auth0Client : OAuth2Client
     {
-        private const string AuthorizationEndpoint = @"https://{0}.auth0.com/authorize";
-        private const string TokenEndpoint = @"https://{0}.auth0.com/oauth/token";
-        private const string UserInfo = @"https://{0}.auth0.com/userinfo?access_token={1}";
+        private const string AuthorizationEndpoint = @"https://{0}/authorize";
+        private const string TokenEndpoint = @"https://{0}/oauth/token";
+        private const string UserInfo = @"https://{0}/userinfo?access_token={1}";
 
         private readonly string appId;
         private readonly string appSecret;
