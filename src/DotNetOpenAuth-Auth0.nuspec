@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>DotNetOpenAuth-Auth0</id>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <owners>Auth0</owners>
 	<authors>Eugenio Pace, Sebastian Iacomuzzi, Jose Romaniello, Auth0</authors>
     <projectUrl>https://github.com/auth0/DotNetOpenAuth-Auth0</projectUrl>
