@@ -50,11 +50,22 @@
 
          public static void RegisterAllSocialProviders(string appId, string appSecret, string domain)
          {
+             var friendlyNames = new Dictionary<string, string>
+                 {
+                     {"google-oauth2", "Google"},
+                     {"windowslive",   "Live ID"}
+                 };
+
              var client = new Client(appId, appSecret, domain);
              var connections = client.GetSocialConnections().Where(c => c.Enabled);
              foreach (var c in connections)
              {
-                 OAuthWebSecurity.RegisterClient(new OpenAuthClient(c.Name, appId, appSecret, domain, c.Name), c.Name, new Dictionary<string, object>());
+                 string friendlyName;
+                 if (!friendlyNames.TryGetValue(c.Name, out friendlyName))
+                 {
+                     friendlyName = c.Name;
+                 }
+                 OAuthWebSecurity.RegisterClient(new OpenAuthClient(c.Name, appId, appSecret, domain, c.Name), friendlyName, new Dictionary<string, object>());
              }
          }
 
