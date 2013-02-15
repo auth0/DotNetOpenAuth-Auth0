@@ -1,15 +1,19 @@
-﻿namespace $rootnamespace$
+﻿namespace Auth0
 {
     using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Net;
     using System.Text;
+    using System.Linq;
     using DotNetOpenAuth.AspNet.Clients;
     using DotNetOpenAuth.Messaging;
     using Newtonsoft.Json;
+    using System.Collections;
+    using Microsoft.Web.WebPages.OAuth;
+    using Newtonsoft.Json.Linq;
 
-    public class Auth0Client : OAuth2Client
+    public class OpenAuthClient : OAuth2Client
     {
         private const string AuthorizationEndpoint = @"https://{0}/authorize";
         private const string TokenEndpoint = @"https://{0}/oauth/token";
@@ -17,26 +21,46 @@
 
         private readonly string appId;
         private readonly string appSecret;
-        private readonly string tenant;
+        private readonly string domain;
         private readonly string connection;
 
-        public Auth0Client(string appId, string appSecret, string tenant, string connection)
-            : this("Auth0", appId, appSecret, tenant, connection)
+        public OpenAuthClient(string appId, string appSecret, string domain, string connection = "")
+            : this("Auth0", appId, appSecret, domain, connection)
         {
         }
 
-        public Auth0Client(string name, string appId, string appSecret, string tenant, string connection)
+        public OpenAuthClient(string name, string appId, string appSecret, string domain, string connection = "")
             : base(name)
         {
             this.appId = appId;
             this.appSecret = appSecret;
-            this.tenant = tenant;
+            this.domain = domain;
             this.connection = connection;
         }
 
+         public static void RegisterAllProviders(string appId, string appSecret, string domain)
+         {
+             var client = new Client(appId, appSecret, domain);
+             var connections = client.GetConnections().Where(c => c.Enabled);
+             foreach (var c in connections)
+             {
+                 OAuthWebSecurity.RegisterClient(new OpenAuthClient(c.Name, appId, appSecret, domain, c.Name), c.Name, new Dictionary<string, object>());
+             }
+        }
+
+         public static void RegisterAllSocialProviders(string appId, string appSecret, string domain)
+         {
+             var client = new Client(appId, appSecret, domain);
+             var connections = client.GetSocialConnections().Where(c => c.Enabled);
+             foreach (var c in connections)
+             {
+                 OAuthWebSecurity.RegisterClient(new OpenAuthClient(c.Name, appId, appSecret, domain, c.Name), c.Name, new Dictionary<string, object>());
+             }
+         }
+
         protected override Uri GetServiceLoginUrl(Uri returnUrl)
         {
-            var builder = new UriBuilder(string.Format(AuthorizationEndpoint, this.tenant));
+            var builder = new UriBuilder(string.Format(AuthorizationEndpoint, this.domain));
             builder.AppendQueryArgument("client_id", this.appId);
             builder.AppendQueryArgument("response_type", "code");
             builder.AppendQueryArgument("redirect_uri", returnUrl.AbsoluteUri);
@@ -47,7 +71,7 @@
 
         protected override IDictionary<string, string> GetUserData(string accessToken)
         {
-            var request = WebRequest.Create(string.Format(UserInfo, this.tenant, accessToken));
+            var request = WebRequest.Create(string.Format(UserInfo, this.domain, accessToken));
 
             using (var response = request.GetResponse())
             {
@@ -55,13 +79,24 @@
                 {
                     using (var streamReader = new StreamReader(responseStream))
                     {
-                        Dictionary<string, string> values
-                            = JsonConvert.DeserializeObject<Dictionary<string, string>>(streamReader.ReadToEnd());
+                        var values
+                            = JsonConvert.DeserializeObject<Dictionary<string, object>>(streamReader.ReadToEnd());
 
                         // map user_id to id as DNOA needs it
                         values.Add("id", values["user_id"]);
 
-                        return values;
+                        var result = values.Where(kv => kv.Value is string)
+                                            .ToDictionary(kv => kv.Key, kv => (string)kv.Value);
+                        var identities = ((JArray)values["identities"]).OfType<JObject>().ToList();
+
+                        for (var i = 0; i < identities.Count; i++)
+                        {
+                            foreach (var pv in identities[i])
+                            {
+                                result["identity_" + i + "_" + pv.Key] = pv.Value.ToString();
+                            }
+                        }
+                        return result;
                     }
                 }
             }
@@ -77,7 +112,7 @@
                                 .Append("grant_type=authorization_code")
                                 .ToString();
 
-            WebRequest tokenRequest = WebRequest.Create(string.Format(TokenEndpoint, this.tenant));
+            WebRequest tokenRequest = WebRequest.Create(string.Format(TokenEndpoint, this.domain));
             tokenRequest.ContentType = "application/x-www-form-urlencoded";
             tokenRequest.ContentLength = entity.Length;
             tokenRequest.Method = "POST";
