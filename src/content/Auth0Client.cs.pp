@@ -94,7 +94,7 @@
                             = JsonConvert.DeserializeObject<Dictionary<string, object>>(streamReader.ReadToEnd());
 
                         // map user_id to id as DNOA needs it
-                        values.Add("id", values["user_id"]);
+                        values["id"] = values["user_id"]);
 
                         var result = values.Where(kv => kv.Value is string)
                                             .ToDictionary(kv => kv.Key, kv => (string)kv.Value);
