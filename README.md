@@ -1,3 +1,5 @@
+# This project is now deprecated. 
+
 Auth0 authentication client for the [DotNetOpenAuth library](http://www.dotnetopenauth.net/).
 
 ## Installation
@@ -28,7 +30,7 @@ If you have found a bug or if you have a feature request, please report them at 
 
 ## Author
 
-[Auth0](auth0.com)
+[Auth0](https://auth0.com)
 
 ## License
 
